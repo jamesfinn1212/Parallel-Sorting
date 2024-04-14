@@ -1,7 +1,41 @@
 import java.util.Arrays;
+import java.util.Stack;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MSQSA1 {
+
+    // random quick sort partition
+    public static int partition(int[] array, int start, int end) {
+
+        if(start < end) {
+            // Choose a pivot index randomly within the range of the subarray
+            int pivotIndex = ThreadLocalRandom.current().nextInt(start, end + 1);
+            int pivot = array[pivotIndex];
+            int i = start, j = end;
+            // Partition the array around the pivot
+            while (i <= j) {
+                while (array[i] < pivot) {
+                    i++;
+                }
+                while (array[j] > pivot) {
+                    j--;
+                }
+                if (i <= j) {
+                    int temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                    i++;
+                    j--;
+                }
+            }
+
+            return pivotIndex;
+        }
+
+        return 0;
+
+    }
+
     // Method to perform non-recursive quick sort on a subarray
     public static void quickSort(int[] array, int start, int end) {
         if (start < end) {
@@ -30,6 +64,44 @@ public class MSQSA1 {
                 quickSort(array, start, j);
             if (i < end)
                 quickSort(array, i, end);
+        }
+    }
+
+    // non recursive version of quicksort
+    public static void quickSortNonRecurisve(int[] array, int start, int end) {
+        if (start < end) {
+
+            // Non-Recursively sort the two halves using a stack
+            Stack<Integer> stack = new Stack<>();
+
+            // push end and start index to stack to enter while loop
+            stack.push(start);
+            stack.push(end);
+
+            // keep popping from stack while its not empty
+            while(!stack.isEmpty()) {
+
+                // pop high and low elements
+                int high = stack.pop();
+                int low = stack.pop();
+
+                int pivotIndex = partition(array, low, high);
+
+                // if there are elements on left side of pivot push left side to stack
+                if(pivotIndex - 1 > low) {
+                    stack.push(low);
+                    stack.push(pivotIndex - 1);
+                }
+
+                // if there are elements to the right side of the pivot, push right side to stack
+                if(pivotIndex + 1 < high) {
+                    stack.push(pivotIndex + 1);
+                    stack.push(high);
+                }
+
+            }
+
+
         }
     }
 
@@ -103,7 +175,7 @@ public class MSQSA1 {
             final int start = i * (num_integer / num_thread);
             final int end = (i == num_thread - 1) ? num_integer : (i + 1) * (num_integer / num_thread);
             threads[i] = new Thread(() -> {
-                quickSort(Array, start, end - 1);
+                quickSortNonRecurisve(Array, start, end - 1);
             });
             threads[i].start();
         }
