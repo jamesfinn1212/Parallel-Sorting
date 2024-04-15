@@ -1,7 +1,53 @@
 import java.util.Arrays;
+import java.util.Stack;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MSQSA1 {
+
+    // random quick sort partition
+    public static int partition(int[] array, int start, int end) {
+        if (start < end) {
+            // Choose a pivot index randomly within the range of the subarray
+            int pivotIndex = ThreadLocalRandom.current().nextInt(start, end + 1);
+
+            // Swap the pivot element with the last element in the subarray
+            int temp = array[pivotIndex];
+            array[pivotIndex] = array[end];
+            array[end] = temp;
+
+            // Use the last element as the pivot
+            int pivot = array[end];
+
+            // Initialize the partition index
+            int partitionIndex = start;
+
+            // Partition the array around the pivot
+            for (int i = start; i < end; i++) {
+                if (array[i] <= pivot) {
+                    // Swap elements at i and partitionIndex
+                    temp = array[i];
+                    array[i] = array[partitionIndex];
+                    array[partitionIndex] = temp;
+
+                    partitionIndex++;
+                }
+            }
+
+            // Swap the pivot element with the element at the partition index
+            temp = array[partitionIndex];
+            array[partitionIndex] = array[end];
+            array[end] = temp;
+
+            // Print array for visualization (optional)
+
+
+            // Return the partition index
+            return partitionIndex;
+        }
+
+        return start; // Return start index if the subarray has only one element
+    }
+
     // Method to perform non-recursive quick sort on a subarray
     public static void quickSort(int[] array, int start, int end) {
         if (start < end) {
@@ -30,6 +76,44 @@ public class MSQSA1 {
                 quickSort(array, start, j);
             if (i < end)
                 quickSort(array, i, end);
+        }
+    }
+
+    // non recursive version of quicksort
+    public static void quickSortNonRecurisve(int[] array, int start, int end) {
+        if (start < end) {
+
+            // Non-Recursively sort the two halves using a stack
+            Stack<Integer> stack = new Stack<>();
+
+            // push end and start index to stack to enter while loop
+            stack.push(start);
+            stack.push(end);
+
+            // keep popping from stack while its not empty
+            while(!stack.isEmpty()) {
+
+                // pop high and low elements
+                int high = stack.pop();
+                int low = stack.pop();
+
+                int pivotIndex = partition(array, low, high);
+
+                // if there are elements on left side of pivot push left side to stack
+                if(pivotIndex - 1 > low) {
+                    stack.push(low);
+                    stack.push(pivotIndex - 1);
+                }
+
+                // if there are elements to the right side of the pivot, push right side to stack
+                if(pivotIndex + 1 < high) {
+                    stack.push(pivotIndex + 1);
+                    stack.push(high);
+                }
+
+            }
+
+
         }
     }
 
@@ -89,7 +173,7 @@ public class MSQSA1 {
 
         // Generate N random integers
         for (int i = 0; i < num_integer; i++) {
-            Array[i] = ThreadLocalRandom.current().nextInt();
+            Array[i] = ThreadLocalRandom.current().nextInt(0, 40000);
         }
 
         // Create an array of threads
@@ -103,7 +187,7 @@ public class MSQSA1 {
             final int start = i * (num_integer / num_thread);
             final int end = (i == num_thread - 1) ? num_integer : (i + 1) * (num_integer / num_thread);
             threads[i] = new Thread(() -> {
-                quickSort(Array, start, end - 1);
+                quickSortNonRecurisve(Array, start, end - 1); // Adjust end index to end - 1
             });
             threads[i].start();
         }
@@ -132,5 +216,20 @@ public class MSQSA1 {
         long et = System.currentTimeMillis();
         System.out.println("Sorted Array: " + Arrays.toString(Array));
         System.out.println("Running time: " + (et - st) + " ms");
+        System.out.println(checkCorrect(Array));
     }
+
+
+    public static boolean checkCorrect(int[] array){
+        for(int i = 0; i< array.length-1; i++){
+            if(array[i] > array[i+1]) {
+                System.out.println("i " + array[i]);
+                System.out.println("i+1 " + array[i+1]);
+                return false;
+            }
+
+        }
+        return true;
+    }
+
 }
