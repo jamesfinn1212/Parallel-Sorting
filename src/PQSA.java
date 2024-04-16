@@ -1,10 +1,11 @@
+import java.util.Arrays;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 
 public class PQSA {
     public static void main(String[] args) {
         // Number of elements in the array
-        int size = 5000000;
+        int size = 1000000;
         // Number of processors available to the JVM
         int numProcessors = 4;
 
@@ -29,8 +30,12 @@ public class PQSA {
         // Stop the timer
         long endTime = System.currentTimeMillis();
 
+
+        System.out.println(Arrays.toString(data));
         // Print the time taken to sort the array
+        System.out.println(MSQSA1.checkCorrect(data));
         System.out.println("Time taken: " + (endTime - startTime) + "ms");
+        System.out.println();
     }
 
     // Task to sort a subarray of an integer array using Quick Sort
@@ -63,6 +68,7 @@ public class PQSA {
                     invokeAll(left, right);
                 }
             }
+
         }
 
         // Partition the array and return the pivot index
