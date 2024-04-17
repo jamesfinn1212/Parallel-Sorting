@@ -67,36 +67,7 @@ public class MSQSA1_V2 {
         return start; // Return start index if the subarray has only one element
     }
 
-    // Method to perform non-recursive quick sort on a subarray
-    public static void quickSort(int[] array, int start, int end) {
-        if (start < end) {
-            // Choose a pivot index randomly within the range of the subarray
-            int pivotIndex = ThreadLocalRandom.current().nextInt(start, end + 1);
-            int pivot = array[pivotIndex];
-            int i = start, j = end;
-            // Partition the array around the pivot
-            while (i <= j) {
-                while (array[i] < pivot) {
-                    i++;
-                }
-                while (array[j] > pivot) {
-                    j--;
-                }
-                if (i <= j) {
-                    int temp = array[i];
-                    array[i] = array[j];
-                    array[j] = temp;
-                    i++;
-                    j--;
-                }
-            }
-            // Recursively sort the two halves
-            if (start < j)
-                quickSort(array, start, j);
-            if (i < end)
-                quickSort(array, i, end);
-        }
-    }
+
 
     // non recursive version of quicksort
     public static void quickSortNonRecurisve(int[] array, int start, int end) {
@@ -186,13 +157,13 @@ public class MSQSA1_V2 {
 
     public static void main(String[] args) {
         // Input parameters
-        int num_integer = 1000000; // Number of random integers
-        int num_thread = 4; // Number of threads
+        int num_integer = 5000000; // Number of random integers
+        int num_thread = 8; // Number of threads
         int[] Array = new int[num_integer];
 
         // Generate N random integers
         for (int i = 0; i < num_integer; i++) {
-            Array[i] = ThreadLocalRandom.current().nextInt(0, 40000);
+            Array[i] = ThreadLocalRandom.current().nextInt(-20000, 4000000);
         }
 
         // Create an array of threads
