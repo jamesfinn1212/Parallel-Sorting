@@ -16,7 +16,7 @@ public class MSQSA1_V2 {
         @Override
         public void run() {
             try{
-                quickSortNonRecurisve(array, start, end - 1); // Adjust end index to end - 1
+                quickSortNonRecurisve(array, start, end -1); // Adjust end index to end - 1
             }catch (Exception e){
                 System.out.println("Exception caught");
             }
@@ -157,8 +157,8 @@ public class MSQSA1_V2 {
 
     public static void main(String[] args) {
         // Input parameters
-        int num_integer = 5000000; // Number of random integers
-        int num_thread = 8; // Number of threads
+        int num_integer = 1000000; // Number of random integers
+        int num_thread = 4; // Number of threads
         int[] Array = new int[num_integer];
 
         // Generate N random integers
@@ -193,7 +193,9 @@ public class MSQSA1_V2 {
         int interval = num_integer / num_thread;
         while (interval < num_integer) {
             for (int i = 0; i < num_integer; i += interval * 2) {
-                if (i + interval < num_integer) {
+                if (i + interval < num_integer) {                      //edge case for the end
+                    System.out.println("i " + i);
+                    System.out.println("interval = " + interval);
                     merge(Array, i, i + interval - 1, Math.min(i + 2 * interval - 1, num_integer - 1));
                 }
             }
@@ -202,7 +204,7 @@ public class MSQSA1_V2 {
 
         // Record end time and calculate running time
         long et = System.currentTimeMillis();
-        System.out.println("Sorted Array: " + Arrays.toString(Array));
+       // System.out.println("Sorted Array: " + Arrays.toString(Array));
         System.out.println("Running time: " + (et - st) + " ms");
         System.out.println(checkCorrect(Array));
     }
